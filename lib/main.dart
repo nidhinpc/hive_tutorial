@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:hive_tutorial/db/model/data_model.dart';
 import 'package:hive_tutorial/screens/home_screen.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized(); // Ensure Flutter bindings are initialized before using Hive
+  await Hive.initFlutter(); // step 1: Initialize Hive
+  if (!Hive.isAdapterRegistered(StudentModelAdapter().typeId)) {
+    // step 6: Register the adapter if not already registered
+    Hive.registerAdapter(StudentModelAdapter());
+  }
   runApp(const MyApp());
 }
 
@@ -33,7 +41,7 @@ class MyApp extends StatelessWidget {
       ),
       home: HomeScreen(),
     );
-  } 
+  }
 }
 
 class MyHomePage extends StatefulWidget {

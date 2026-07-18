@@ -8,6 +8,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    getAllStudents(); // Fetch all students when the screen is built
     return Scaffold(
       appBar: AppBar(title: const Text('Home Screen')),
       body: Column(
@@ -40,6 +41,17 @@ class HomeScreen extends StatelessWidget {
                     final student = studentsList[index];
                     return ListTile(
                       title: Text(student.name), // Replace with actual name
+                      trailing: IconButton(
+                        icon: Icon(Icons.delete),
+                        onPressed: () {
+                          if (student.id != null) {
+                            deleteStudent(student.id!); // Call the delete function with the student's id
+                          } else {
+                            // Handle the case where the id is null (optional)
+                            print('Student ID is null. Cannot delete.');
+                          }
+                        },
+                      ),
                     );
                   },
                 );
