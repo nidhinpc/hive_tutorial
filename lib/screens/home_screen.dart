@@ -41,16 +41,92 @@ class HomeScreen extends StatelessWidget {
                     final student = studentsList[index];
                     return ListTile(
                       title: Text(student.name), // Replace with actual name
-                      trailing: IconButton(
-                        icon: Icon(Icons.delete),
-                        onPressed: () {
-                          if (student.id != null) {
-                            deleteStudent(student.id!); // Call the delete function with the student's id
-                          } else {
-                            // Handle the case where the id is null (optional)
-                            print('Student ID is null. Cannot delete.');
-                          }
-                        },
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            icon: Icon(Icons.edit),
+                            onPressed: () {
+                              // Implement your edit functionality here
+                              // For example, you can show a dialog to edit the student's name
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  final TextEditingController
+                                  _editNameController = TextEditingController(
+                                    text: student.name,
+                                  );
+                                  return AlertDialog(
+                                    title: Text('Edit Student Name'),
+                                    content: TextField(
+                                      controller: _editNameController,
+                                      decoration: InputDecoration(
+                                        labelText: 'Enter new name',
+                                        border: OutlineInputBorder(),
+                                      ),
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.of(
+                                            context,
+                                          ).pop(); // Close the dialog
+                                        },
+                                        child: Text('Cancel'),
+                                      ),
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          if (student.id == null) {
+                                            // Handle the case where the id is null (optional)
+                                            print(
+                                              'Student ID is null. Cannot update.',
+                                            );
+                                            return;
+                                          }
+                                          final newName = _editNameController
+                                              .text
+                                              .trim();
+                                          if (newName.isNotEmpty) {
+                                            StudentModel updatedStudent =
+                                                StudentModel(
+                                                  id: student.id,
+                                                  name: newName,
+                                                );
+                                            updateStudent(
+                                              student.id!,
+                                              updatedStudent,
+                                            );
+                                            Navigator.of(
+                                              context,
+                                            ).pop(); // Close the dialog
+                                          }
+                                        },
+                                        child: Text('Update'),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                          ),
+                          SizedBox(
+                            width: 8,
+                          ), // Add some spacing between the buttons
+                          IconButton(
+                            icon: const Icon(Icons.delete),
+                            onPressed: () {
+                              print("Student Name: ${student.name}");
+                              print("Student ID: ${student.id}");
+
+                              if (student.id == null) {
+                                print("ID is NULL");
+                                return;
+                              }
+
+                              deleteStudent(student.id!);
+                            },
+                          ),
+                        ],
                       ),
                     );
                   },
